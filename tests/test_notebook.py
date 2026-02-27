@@ -1,3 +1,3 @@
 def test_sample():
-    data = [1,3,2]
+    data = [4,1,1]
     assert sum(data) == 6
