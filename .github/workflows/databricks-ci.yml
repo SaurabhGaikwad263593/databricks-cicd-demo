@@ -5,8 +5,26 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - run: echo "Workflow working"
+
+      - name: Install tools
+        run: |
+          pip install databricks-cli pytest
+
+      - name: Run tests
+        run: pytest
+
+      - name: Configure Databricks CLI
+        run: |
+          databricks configure --token <<EOF
+          ${{ secrets.DATABRICKS_HOST }}
+          ${{ secrets.DATABRICKS_TOKEN }}
+          EOF
+
+      - name: Deploy notebooks
+        run: |
+          databricks workspace import_dir notebooks /Users/saurabhgaikwad899@gmail.com/CI_demo -o
